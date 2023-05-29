@@ -1,2 +1,6 @@
 accelerate
 deepspeed
+transformers
+optimum
+bitsandbytes
+scipy

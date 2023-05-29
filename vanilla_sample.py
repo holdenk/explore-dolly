@@ -1,4 +1,5 @@
 import numpy as np
+from optimum.bettertransformer import BetterTransformer
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
@@ -7,8 +8,8 @@ from transformers import (
 )
 
 tokenizer = AutoTokenizer.from_pretrained("databricks/dolly-v1-6b", padding_side="left")
-model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v1-6b", device_map="auto", trust_remote_code=True)
-
+og_model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v1-6b", device_map="auto", trust_remote_code=True)
+model = BetterTransformer.transform(og_model, keep_original_model=False)
 
 
 PROMPT_FORMAT = """Below is an instruction that describes a task. Write a response that appropriately completes the request.
@@ -47,4 +48,5 @@ def generate_response(instruction: str, *, model: PreTrainedModel, tokenizer: Pr
     return None
 
 # Sample similar to: "Excited to announce the release of Dolly, a powerful new language model from Databricks! #AI #Databricks"
-generate_response("Write a tweet announcing Dolly, a large language model from Databricks.", model=model, tokenizer=tokenizer)
+r = generate_response("Write a tweet announcing Dolly, a large language model from Databricks.", model=model, tokenizer=tokenizer)
+print(r)
